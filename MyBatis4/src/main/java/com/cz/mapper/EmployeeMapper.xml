@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.EmployeeMapper">
+    <!--sql片段可以复用-->
+    <sql id="emp_column">
+        emp_Id,emp_Name,gender,email,salary,job_Title,dept_Id
+    </sql>
+    <resultMap id="empLazyLoadResultMap" type="com.cz.model.Employee">
+        <id column="emp_id" property="empId"/>
+        <association property="dept" javaType="com.cz.model.Department"
+                     select="com.DepartmentMapper.getDepartmentById"
+                     column="dept_id">
+            <id column=""/>
+        </association>
+    </resultMap>
+    <select id="getEmpByIdLazyLoad" parameterType="java.lang.Integer"
+            resultMap="empLazyLoadResultMap">
+        select <include refid="emp_column"/>
+        from employee where emp_id=#{empId}
+    </select>
+    <!--根据部门id查询员工们-->
+    <select id="getEmpsByDeptIdLazyLoad" parameterType="java.lang.Integer" resultType="com.cz.model.Employee">
+        select e.emp_id,e.emp_name,e.gender,e.email,e.salary,e.job_title,e.dept_id
+        from employee e where e.dept_id = #{deptId}
+    </select>
+</mapper>

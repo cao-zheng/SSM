@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.AdminMapper">
+    <insert id="addAdmin" parameterType="com.Admin">
+        <!--selectKey  会将 SELECT LAST_INSERT_ID()的结果放入到传入的model的主键里面，
+         keyProperty 对应的model中的主键的属性名，这里是 user 中的id，因为它跟数据库的主键对应
+         order AFTER 表示 SELECT LAST_INSERT_ID() 在insert执行之后执行,多用与自增主键，
+               BEFORE 表示 SELECT LAST_INSERT_ID() 在insert执行之前执行，这样的话就拿不到主键了，
+                     这种适合那种主键不是自增的类型
+         resultType 主键类型 -->
+        <selectKey keyProperty="deptId" keyColumn="dept_id" resultType="int" order="AFTER">
+            select last_insert_id() as deptId
+        </selectKey>
+        insert into admin(name) values (#{name})
+    </insert>
+    <!--一对一查询方式1-->
+    <select id="getAdminAll" resultType="com.Admin">
+        select a.dept_id,a.name,d.dept_name
+        from admin a inner join department d on a.dept_id = d.dept_id
+    </select>
+</mapper>

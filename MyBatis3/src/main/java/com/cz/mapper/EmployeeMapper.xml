@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.EmployeeMapper">
+    <!--sql片段可以复用-->
+    <sql id="emp_column">
+        emp_Id,emp_Name,gender,email,salary,job_Title,dept_Id
+    </sql>
+    <sql id="query_emp_where">
+        <if test="employee.empName != null">
+            and emp_name like '${employee.empName}%'
+        </if>
+        <if test="employee.gender != null">
+            and gender = #{employee.gender}
+        </if>
+        <!--and dept_id in(1000,1001,1002)
+            collection:输入参数属性
+            open:循环开始的符号
+            close:循环后结束的符号
+            separator:分隔符
+        -->
+        <if test="ids != null">
+            <foreach collection="ids" open="and dept_id in(" close=")"
+                     item="id" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </sql>
+    
+    <select id="getEmpByEmpDto" resultType="com.Employee" parameterType="com.EmpDto">
+    select <include refid="emp_column"/> from employee
+    <!--where 标签有两个用途 1.添加where关键字；2.判断第一个条件不需要and -->
+    <where>
+       <include refid="query_emp_where"/>
+    </where>
+</select>
+</mapper>

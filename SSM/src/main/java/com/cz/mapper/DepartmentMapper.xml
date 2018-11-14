@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cz.mapper.DepartmentMapper">
+    <sql id="DepartmentColumn">dept_id,dept_name</sql>
+
+    <resultMap id="departmentAndemployeeLazy" type="com.cz.model.Department">
+        <id column="dept_id" property="deptId"/>
+        <result column="dept_name" property="deptName"/>
+        <collection column="dept_id" property="emps" ofType="com.cz.model.Employee"
+                    select="com.cz.mapper.EmployeeMapper.getEmpByDepartmentLazy">
+            <id column="emp_Id" property="empId"/>
+            <result column="emp_Name" property="empName"/>
+            <result column="gender" property="gender"/>
+            <result column="email" property="email"/>
+            <result column="salary" property="salary"/>
+            <result column="job_Title" property="jobTitle"/>
+        </collection>
+    </resultMap>
+    <select id="getDepartmentEmp" parameterType="java.lang.Integer" resultMap="departmentAndemployeeLazy">
+        select <include refid="DepartmentColumn"/> from department where dept_id = #{deptId}
+    </select>
+
+    <select id="getDepartmentLazy" parameterType="java.lang.Integer" resultType="com.cz.model.Department">
+      select <include refid="DepartmentColumn"/> from department where dept_id = #{deptId}
+    </select>
+
+    <select id="getAllDepartment" resultType="com.cz.model.Department">
+        select <include refid="DepartmentColumn"/> from department
+    </select>
+</mapper>

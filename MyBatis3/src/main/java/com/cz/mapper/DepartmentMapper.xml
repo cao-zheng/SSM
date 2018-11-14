@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.DepartmentMapper">
+    <!--一对一查询方式2-->
+    <resultMap id="adminDeptResultMap" type="com.Department">
+        <!--主表映射department-->
+        <id column="dept_id" property="deptId"></id>
+        <result column="dept_name" property="deptName"/>
+        <!--一对一关系从表admin
+            association:用于多对一，一对一，映射
+            property:Department对象里面新加的那个admin的属性名称
+            javaType：属性的类型
+        -->
+        <association property="admin" javaType="com.Admin">
+            <id column="dept_id" property="deptId"/>
+            <result column="name" property="name"/>
+            <result column="dept_name" property="deptName"/>
+        </association>
+    </resultMap>
+    <select id="getDepartmentTypeTwo" resultMap="adminDeptResultMap">
+        select d.dept_id,d.dept_name,a.name
+        from admin a inner join department d on a.dept_id = d.dept_id
+    </select>
+    <!--==========================================一对多====================================================-->
+    <!--一对多-->
+    <resultMap id="deptEmpResultMap" type="com.Department">
+        <!--主表-->
+        <id column="dept_id" property="deptId"/>
+        <result column="dept_name" property="deptName"/>
+        <!--从表是一个集合，所以是collection,一对多，映射
+            property:department中的那个集合对象List<Employee> emps
+            ofType:集合对象中的属性类型
+        -->
+        <collection property="emps" ofType="com.Employee">
+            <id column="emp_id" property="empId"/>
+            <result column="emp_name" property="empName"/>
+        </collection>
+    </resultMap>
+    <select id="getDepartmentEmp" resultMap="deptEmpResultMap" parameterType="java.lang.Integer">
+        select d.dept_id,d.dept_name,e.emp_id,e.emp_name
+        from department d inner join employee e on d.dept_id and e.dept_id
+        <where>
+            and d.dept_id = #{deptId}
+        </where>
+    </select>
+    <!--方式2-->
+    <select id="getDepartmentEmpAll" resultType="com.cz.model.Department"  parameterType="java.lang.Integer">
+        select d.dept_id,d.dept_name,e.emp_id,e.emp_name
+        from department d inner join employee e on d.dept_id and e.dept_id
+        where d.dept_id = #{deptId}
+    </select>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--jdbc外部资源文件-->
+    <properties resource="jdbc.properties"/>
+    <!--驼峰命名法-->
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--开启延迟加载总开关-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!--开启按需加载的开关-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <!--开启二级缓存-->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+    <environments default="development">
+        <environment id="development">
+            <!--事务管理方式-->
+            <transactionManager type="JDBC"/>
+            <!--数据库连接四要素-->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbcUrl}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+
+                <!--在任意时间可以存在的活动（也就是正在使用）连接数量，默认值：10-->
+                <property name="poolMaximumActiveConnections" value="10"/>
+                <!--任意时间可能存在的空闲连接数。-->
+                <property name="poolMaximumIdleConnections" value="3"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+<!--        &lt;!&ndash;第一种方式，用resource&ndash;&gt;
+        <mapper resource="com/cz2/mapper/UserMapper.xml"/>
+        &lt;!&ndash;第二种方式,用class&ndash;&gt;
+        <mapper resource="com.cz2.mapper.UserMapper"/>-->
+        <!--第三种方式，用package-->
+        <package name="com.cz.mapper"/>
+    </mappers>
+</configuration>

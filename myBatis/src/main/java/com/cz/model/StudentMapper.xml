@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cz.model.Student">
+    <!--id:表示一个sql句柄，相当于jdbc里的statement对象
+        parameterType:输入参数类型，在sql语句中，通过占位符#{}来接受参数
+        resultType:SQL操作的返回结果类型-->
+    <select id="getStudentById" parameterType="java.lang.Integer" resultType="com.cz.model.Student">
+        select id,name,create_time from student where id = #{id}
+    </select>
+    <!--查询列表-->
+    <select id="getStudentList" resultType="com.cz.model.Student">
+        select id,name,create_time from student
+    </select>
+    <select id="addStudent" parameterType="com.cz.model.Student">
+        insert into student (name,create_time) values (#{name},#{createTime})
+    </select>
+    <delete id="delStudent" parameterType="java.lang.Integer">
+        delete from student where id=#{id}
+    </delete>
+    <update id="updateStudent" parameterType="com.cz.model.Student">
+        update student set name = #{name},create_time = #{createTime} where id=  #{id};
+    </update>
+</mapper>
